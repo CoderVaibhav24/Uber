@@ -5,11 +5,14 @@
 
 ---
 
+
 ## Table of Contents
 
 - [User Endpoints](#user-endpoints)
   - [Register User](#register-user)
   - [Login User](#login-user)
+  - [Get User Profile](#get-user-profile)
+  - [Logout User](#logout-user)
   - _More endpoints coming soon_
 
 ---
@@ -189,6 +192,79 @@ Content-Type: application/json
 **Notes:**
 - The endpoint returns a JWT token for authentication.
 - Both email and password must be valid, or the request will fail with appropriate error messages.
+
+---
+
+
+### Get User Profile
+
+**Endpoint:**
+
+`GET /users/profile`
+
+**Description:**
+
+Returns the authenticated user's profile. Requires a valid JWT token (sent as a cookie or in the Authorization header).
+
+**Authentication:**
+
+- Requires JWT token (cookie `token` or `Authorization: Bearer <token>` header)
+
+**Responses:**
+
+- **200 OK**
+  - Returns the user profile.
+  - Example:
+    ```json
+    {
+      "user": {
+        "_id": "<userId>",
+        "fullName": {
+          "firstName": "<First Name>",
+          "lastName": "<Last Name>"
+        },
+        "email": "<user@example.com>"
+        // ...other user fields
+      }
+    }
+    ```
+- **401 Unauthorized**
+  - Missing or invalid token.
+  - Example:
+    ```json
+    { "message": "Access denied. No token provided." }
+    ```
+
+---
+
+### Logout User
+
+**Endpoint:**
+
+`GET /users/logout`
+
+**Description:**
+
+Logs out the authenticated user by clearing the JWT cookie and blacklisting the token. Requires a valid JWT token.
+
+**Authentication:**
+
+- Requires JWT token (cookie `token` or `Authorization: Bearer <token>` header)
+
+**Responses:**
+
+- **200 OK**
+  - Logout successful.
+  - Example:
+    ```json
+    { "message": "Logged out successfully" }
+    ```
+- **401 Unauthorized**
+  - Missing or invalid token.
+  - Example:
+    ```json
+    { "message": "Access denied. No token provided." }
+    ```
 
 ---
 
