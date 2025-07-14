@@ -9,6 +9,7 @@
 
 - [User Endpoints](#user-endpoints)
   - [Register User](#register-user)
+  - [Login User](#login-user)
   - _More endpoints coming soon_
 
 ---
@@ -101,6 +102,93 @@ Content-Type: application/json
 **Notes:**
 - The endpoint returns a JWT token for authentication.
 - All required fields must be provided and valid, or the request will fail with a 400 status and error details.
+
+---
+
+### Login User
+
+**Endpoint:**
+
+`POST /users/login`
+
+**Description:**
+
+Authenticates an existing user with email and password. On success, returns the user object and a JWT authentication token.
+
+**Request Body:**
+
+Send a JSON object:
+
+```json
+{
+  "email": "<user@example.com>",
+  "password": "<password>"
+}
+```
+
+**Field Requirements:**
+
+- `email` (string, required): Must be a valid email address
+- `password` (string, required): Minimum 8 characters
+
+**Responses:**
+
+- **200 OK**
+  - Authentication successful. Returns user and JWT token.
+  - Example:
+    ```json
+    {
+      "user": {
+        "_id": "<userId>",
+        "fullName": {
+          "firstName": "<First Name>",
+          "lastName": "<Last Name>"
+        },
+        "email": "<user@example.com>"
+        // ...other user fields
+      },
+      "token": "<JWT Token>"
+    }
+    ```
+
+- **400 Bad Request**
+  - Validation failed. Example:
+    ```json
+    {
+      "errors": [
+        {
+          "msg": "<Validation error message>",
+          "param": "<field>",
+          "location": "body"
+        }
+        // ...more errors
+      ]
+    }
+    ```
+
+- **401 Unauthorized**
+  - Invalid credentials. Example:
+    ```json
+    {
+      "message": "Invalid email or password"
+    }
+    ```
+
+**Example Request:**
+
+```
+POST /users/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+**Notes:**
+- The endpoint returns a JWT token for authentication.
+- Both email and password must be valid, or the request will fail with appropriate error messages.
 
 ---
 
