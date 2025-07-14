@@ -19,6 +19,9 @@
 ## Captain Endpoints
 
 - [Register Captain](#register-captain)
+- [Login Captain](#login-captain)
+- [Get Captain Profile](#get-captain-profile)
+- [Logout Captain](#logout-captain)
   - _More endpoints coming soon_
 
 ---
@@ -275,7 +278,164 @@ Logs out the authenticated user by clearing the JWT cookie and blacklisting the 
 ---
 
 
+
 ### Register Captain
+---
+
+### Login Captain
+
+**Endpoint:**
+
+`POST /captain/login`
+
+**Description:**
+
+Authenticates an existing captain with email and password. On success, returns the captain object and a JWT authentication token.
+
+**Request Body:**
+
+```json
+{
+  "email": "<captain@example.com>",
+  "password": "<password>"
+}
+```
+
+**Field Requirements:**
+
+- `email` (string, required): Must be a valid email address
+- `password` (string, required): Minimum 8 characters
+
+**Responses:**
+
+- **200 OK**
+  - Authentication successful. Returns captain and JWT token.
+  - Example:
+    ```json
+    {
+      "captain": {
+        "_id": "<captainId>",
+        "fullName": {
+          "firstName": "<First Name>",
+          "lastName": "<Last Name>"
+        },
+        "email": "<captain@example.com>"
+        // ...other captain fields
+      },
+      "token": "<JWT Token>"
+    }
+    ```
+- **400 Bad Request**
+  - Validation failed. Example:
+    ```json
+    {
+      "errors": [
+        {
+          "msg": "<Validation error message>",
+          "param": "<field>",
+          "location": "body"
+        }
+        // ...more errors
+      ]
+    }
+    ```
+- **401 Unauthorized**
+  - Invalid credentials. Example:
+    ```json
+    {
+      "message": "Invalid email or password"
+    }
+    ```
+
+**Example Request:**
+
+```
+POST /captain/login
+Content-Type: application/json
+
+{
+  "email": "alex.rider@example.com",
+  "password": "securePassword123"
+}
+```
+
+**Notes:**
+- The endpoint returns a JWT token for authentication.
+- Both email and password must be valid, or the request will fail with appropriate error messages.
+
+---
+
+### Get Captain Profile
+
+**Endpoint:**
+
+`GET /captain/profile`
+
+**Description:**
+
+Returns the authenticated captain's profile. Requires a valid JWT token (sent as a cookie or in the Authorization header).
+
+**Authentication:**
+
+- Requires JWT token (cookie `token` or `Authorization: Bearer <token>` header)
+
+**Responses:**
+
+- **200 OK**
+  - Returns the captain profile.
+  - Example:
+    ```json
+    {
+      "captain": {
+        "_id": "<captainId>",
+        "fullName": {
+          "firstName": "<First Name>",
+          "lastName": "<Last Name>"
+        },
+        "email": "<captain@example.com>"
+        // ...other captain fields
+      }
+    }
+    ```
+- **401 Unauthorized**
+  - Missing or invalid token.
+  - Example:
+    ```json
+    { "message": "Access denied. No token provided." }
+    ```
+
+---
+
+### Logout Captain
+
+**Endpoint:**
+
+`GET /captain/logout`
+
+**Description:**
+
+Logs out the authenticated captain by clearing the JWT cookie and blacklisting the token. Requires a valid JWT token.
+
+**Authentication:**
+
+- Requires JWT token (cookie `token` or `Authorization: Bearer <token>` header)
+
+**Responses:**
+
+- **200 OK**
+  - Logout successful.
+  - Example:
+    ```json
+    { "message": "Logout successfully" }
+    ```
+- **401 Unauthorized**
+  - Missing or invalid token.
+  - Example:
+    ```json
+    { "message": "Access denied. No token provided." }
+    ```
+
+---
 
 **Endpoint:**
 
